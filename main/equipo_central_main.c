@@ -12,7 +12,7 @@
 #include "esp_modem.h"
 #include "esp_log.h"
 #include "sim800.h"
-#include "bg96.h"
+//#include "bg96.h"
 
 //#define BROKER_URL "mqtt://mqtt.eclipse.org"
 
@@ -110,14 +110,15 @@ void app_main(void)
     modem_dte_t *dte = esp_modem_dte_init(&config);
     /* Register event handler */
     //ESP_ERROR_CHECK(esp_modem_set_event_handler(dte, modem_event_handler, ESP_EVENT_ANY_ID, NULL));
-    /* create dce object */
-#if CONFIG_EXAMPLE_MODEM_DEVICE_SIM800
+/*#if CONFIG_EXAMPLE_MODEM_DEVICE_SIM800
     modem_dce_t *dce = sim800_init(dte);
-#elif CONFIG_EXAMPLE_MODEM_DEVICE_BG96
-    modem_dce_t *dce = bg96_init(dte);
-#else
-#error "Unsupported DCE"
-#endif
+	#elif CONFIG_EXAMPLE_MODEM_DEVICE_BG96
+ 	modem_dce_t *dce = bg96_init(dte);
+	#else
+	#error "Unsupported DCE"
+	#endif*/
+	/* create dce object */
+	modem_dce_t *dce = sim800_init(dte);
     ESP_ERROR_CHECK(dce->set_flow_ctrl(dce, MODEM_FLOW_CONTROL_NONE));
     ESP_ERROR_CHECK(dce->store_profile(dce));
     /* Print Module ID, Operator, IMEI, IMSI */
@@ -133,11 +134,12 @@ void app_main(void)
     uint32_t voltage = 0, bcs = 0, bcl = 0;
     ESP_ERROR_CHECK(dce->get_battery_status(dce, &bcs, &bcl, &voltage));
     ESP_LOGI(TAG, "Battery voltage: %d mV", voltage);
-    #if CONFIG_EXAMPLE_SEND_MSG
+    //#if CONFIG_EXAMPLE_SEND_MSG
     const char *message = "Welcome to ESP32!";
-    ESP_ERROR_CHECK(example_send_message_text(dce, CONFIG_EXAMPLE_SEND_MSG_PEER_PHONE_NUMBER, message));
+    const char *phone= "+542615361440";
+    ESP_ERROR_CHECK(example_send_message_text(dce, phone, message));
     ESP_LOGI(TAG, "Send send message [%s] ok", message);
-#endif
+//#endif
     /* Power down module */
     ESP_ERROR_CHECK(dce->power_down(dce));
     ESP_LOGI(TAG, "Power down");

@@ -27,6 +27,8 @@
 #define MIN_PATTERN_INTERVAL (9)
 #define MIN_POST_IDLE (0)
 #define MIN_PRE_IDLE (0)
+#define TXD0_PIN  17
+#define RXD0_PIN  16
 
 /**
  * @brief Macro defined for error checking
@@ -390,10 +392,10 @@ modem_dte_t *esp_modem_dte_init(const esp_modem_dte_config_t *config)
 
     MODEM_CHECK(uart_param_config(esp_dte->uart_port, &uart_config) == ESP_OK, "config uart parameter failed", err_uart_config);
     if (config->flow_control == MODEM_FLOW_CONTROL_HW) {
-        res = uart_set_pin(esp_dte->uart_port, CONFIG_EXAMPLE_UART_MODEM_TX_PIN, CONFIG_EXAMPLE_UART_MODEM_RX_PIN,
+        res = uart_set_pin(esp_dte->uart_port, TXD0_PIN, RXD0_PIN,
                            CONFIG_EXAMPLE_UART_MODEM_RTS_PIN, CONFIG_EXAMPLE_UART_MODEM_CTS_PIN);
     } else {
-        res = uart_set_pin(esp_dte->uart_port, CONFIG_EXAMPLE_UART_MODEM_TX_PIN, CONFIG_EXAMPLE_UART_MODEM_RX_PIN,
+        res = uart_set_pin(esp_dte->uart_port, TXD0_PIN, RXD0_PIN,
                            UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
     }
     MODEM_CHECK(res == ESP_OK, "config uart gpio failed", err_uart_config);
